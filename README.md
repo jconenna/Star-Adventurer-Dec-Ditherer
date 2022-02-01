@@ -10,11 +10,14 @@ The device listens to the shutter release signal going to a camera and randomly 
 
 ## Description
 
-A 3d printed bracket is used to attach a 28BYJ-48 stepper motor to the dec slow motion shaft.
+A 3d printed bracket is used to attach a 28BYJ-48 stepper motor to the Dec slow motion shaft using M4 screws/nuts.</br>
+A flexible coupler is used to connect the motor shaft to the slow motion shaft.</br>
 
 ![Dec Assembly 1](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/dec1.jpg?raw=true)
 
+The motor bracket attaches to the bottom of the Dec block using existing screws, with some of the other existing screws removed.
 
+![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/dec2.jpg?raw=true)
 
 ## Bill of Materials
 
