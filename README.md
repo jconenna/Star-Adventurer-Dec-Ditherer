@@ -12,6 +12,9 @@ The device listens to the shutter release signal going to a camera and randomly 
 
 A 3d printed bracket is used to attach a 28BYJ-48 stepper motor to the dec slow motion shaft.
 
+![Dec Assembly 1](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/dec1.jpg?raw=true)
+
+
 
 ## Bill of Materials
 
