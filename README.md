@@ -15,39 +15,37 @@ A 3d printed bracket is used to attach a 28BYJ-48 stepper motor to the dec slow 
 
 ## Bill of Materials
 
-PCB Components:
-1 - Arduino Nano Module (Classic version, check pinout carefully for compatability)
+PCB Components:<br/>
+1 - Arduino Nano Module (Classic version, check pinout carefully for compatability)<br/>
+1 - RGB Character 1602 LCD Display Module<br/>
+2 - PJ-307 3.5 mm Audio Jack Connector PCB Mount Female Socket 5 Pin<br/>
+1 - KY-040 360 Degree Rotary Encoder Module with Knob Cap (threaded shaft with nut)<br/>
+1 - 5.5mm x 2.1mm DC 3 Pin PCB Mounting DC-005<br/>
+2 - Fielect 2 Position 3Pin 1P2T Panel Mount Micro Slide Switch 6mm Handle Height SK-12F44 <br/>
+1 - JST 2.54MM XH 5 Pin Right Angle Connector plug <br/>
+1 - ULN2003APG 16 pin DIP Package<br/>
+1 - 7805 TO-220 Package<br/>
+1 - TIP120 TO-220 Package<br/>
+2 - 10 kOhm Axial Resistor<br/>
+1 - 0.22uF Electrolytic Capacitor<br/>
+1 - 10UF Electrolytic Capacitor<br/>
+1 - 100 nF Ceramic Capacitor<br/>
+2 - RJ11 Modular Jack 6P6C 6 Pins PCB Mount Telephone Connector **optional**<br/>
+1 - 16 pin DIP socket **optional**<br/>
+<br/>
+Dec Components:<br/>
+1 - 28BYJ-48 5V Stepper Motor<br/>
+2 - M4 screws/nuts, or equivalent to mount motor<br/>
+1 - 5mm-7mm Flexible Coupler Diameter 19mm Length 25mm <br/>
+<br/>
+3D Printed:<br/>
+1 - Dec Bracket<br/>
+1 - Case Top<br/>
+1 - Case Bottom<br/>
+<br/>
+PCB<br/>
+1 - Dec Ditherer PCB<br/>
 
-1 - RGB Character 1602 LCD Display Module
-
-2 - PJ-307 3.5 mm Audio Jack Connector PCB Mount Female Socket 5 Pin
-1 - KY-040 360 Degree Rotary Encoder Module with Knob Cap (threaded shaft with nut)
-1 - 5.5mm x 2.1mm DC 3 Pin PCB Mounting DC-005
-2 - Fielect 2 Position 3Pin 1P2T Panel Mount Micro Slide Switch 6mm Handle Height SK-12F44 
-1 - JST 2.54MM XH 5 Pin Right Angle Connector plug 
-1 - ULN2003APG 16 pin DIP Package
-1 - 7805 TO-220 Package
-1 - TIP120 TO-220 Package
-2 - 10 kOhm Axial Resistor
-1 - 0.22uF Electrolytic Capacitor
-1 - 10UF Electrolytic Capacitor
-1 - 100 nF Ceramic Capacitor
-2 - RJ11 Modular Jack 6P6C 6 Pins PCB Mount Telephone Connector **optional**
-1 - 16 pin DIP socket **optional**
-
-Dec Components:
-1 - 28BYJ-48 5V Stepper Motor
-2 - M4 screws/nuts, or equivalent to mount motor
-1 - 5mm-7mm Flexible Coupler Diameter 19mm Length 25mm 
-
-3D Printed:
-1 - Dec Bracket
-1 - Case Top
-1 - Case Bottom
-
-PCB
-1 - Dec Ditherer PCB
-
-
+<br/>
 
 ... work in progress ...
