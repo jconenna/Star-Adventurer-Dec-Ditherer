@@ -19,9 +19,16 @@ The motor bracket attaches to the bottom of the Dec block using existing screws,
 
 ![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/dec2.jpg?raw=true)
 
-The controlling device has a red backlit LCD screen and move/select knob for the user interface.
+The controlling device has a red backlit LCD screen and move/select knob for the user interface. The backlight can be turned off with a switch.
 
 ![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/unit1.jpg?raw=true)
+
+The controlling device is centered around an Arduino Nano (clone).</br>
+The intervalometer shutter release signal enters a 3.5mm jack, where is it monitored to determine when the shutter is closed in order to dither the motor. The alternate 3.5mm jack is used to pass the intervaometer shutter signal on to the camera. Note that this has been tested with Fujifilm and Canon signals, if your brand is equivalent then it should work.
+
+![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/unit2.jpg?raw=true)
+
+
 
 ## Bill of Materials
 
