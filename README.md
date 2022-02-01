@@ -17,7 +17,9 @@ A 3d printed bracket is used to attach a 28BYJ-48 stepper motor to the dec slow 
 
 PCB Components:
 1 - Arduino Nano Module (Classic version, check pinout carefully for compatability)
+
 1 - RGB Character 1602 LCD Display Module
+
 2 - PJ-307 3.5 mm Audio Jack Connector PCB Mount Female Socket 5 Pin
 1 - KY-040 360 Degree Rotary Encoder Module with Knob Cap (threaded shaft with nut)
 1 - 5.5mm x 2.1mm DC 3 Pin PCB Mounting DC-005
