@@ -19,6 +19,10 @@ The motor bracket attaches to the bottom of the Dec block using existing screws,
 
 ![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/dec2.jpg?raw=true)
 
+The controlling device has a red backlit LCD screen and move/select knob for the user interface.
+
+![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/unit1.jpg?raw=true)
+
 ## Bill of Materials
 
 PCB Components:<br/>
