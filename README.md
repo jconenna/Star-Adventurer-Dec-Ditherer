@@ -23,8 +23,12 @@ The controlling device has a red backlit LCD screen and move/select knob for the
 
 ![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/unit1.jpg?raw=true)
 
-The controlling device is centered around an Arduino Nano (clone).</br>
-The intervalometer shutter release signal enters a 3.5mm jack, where is it monitored to determine when the shutter is closed in order to dither the motor. The alternate 3.5mm jack is used to pass the intervaometer shutter signal on to the camera. Note that this has been tested with Fujifilm and Canon signals, if your brand is equivalent then it should work.
+The controlling device is centered around an Arduino Nano (clone).</br></br>
+The intervalometer shutter release signal enters a 3.5mm jack, where is it monitored to determine when the shutter is closed in order to dither the motor. The alternate 3.5mm jack is used to pass the intervaometer shutter signal on to the camera. Note that this has been tested with Fujifilm and Canon signals, if your brand is equivalent then it should work.</br></br>
+
+The white JST 5 Pin Right Angle Connector is used to plug the stepper motor in for control.</br>
+
+.. to be continued ..
 
 ![Dec Assembly 2](https://github.com/jconenna/Star-Adventurer-Dec-Ditherer/blob/main/images/unit2.jpg?raw=true)
 
