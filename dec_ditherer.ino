@@ -906,14 +906,16 @@ void print_dither_px()
 {
   dither_px = float(DA)*pixels_per_step;
   lcd.setCursor(0, 1);
-  if(DA < 100)
-    lcd.print(0);
   if(DA < 10)
-    lcd.print(0);
+    lcd.print("00");
+  else if(DA < 100)
+    lcd.print("0");
   lcd.print(DA);
   lcd.print("=+/-");
   if(dither_px < 10)
-    lcd.print(0);
+    lcd.print("00");
+  else if(dither_px < 100)
+    lcd.print("0");
   lcd.print(dither_px,2);
   lcd.print(" px");
   lcd.setCursor(2, 1);
