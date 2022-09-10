@@ -912,6 +912,8 @@ void print_dither_px()
     lcd.print(0);
   lcd.print(DA);
   lcd.print("=+/-");
+  if(dither_px < 10)
+    lcd.print(0);
   lcd.print(dither_px,2);
   lcd.print(" px");
   lcd.setCursor(2, 1);
