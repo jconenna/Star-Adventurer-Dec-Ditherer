@@ -66,9 +66,17 @@ unsigned long last_button = 0;
 uint8_t button = 0;
 
 // shutter release signals
-int16_t gnd,shu,diff,previous_diff,previous_shu = 0;
+int16_t shu,previous_shu = 0;
+#define GND_PIN A3
 #define SHU_PIN A4
 #define OPEN_CLOSE_THRESHOLD 300
+
+// setup ST-4 (stf) signals
+uint8_t stf_posedge = 0; // was there a positive ST-4 DEC edge?
+uint8_t stf_previous = 0;
+#define DEC_P 13
+#define DEC_N A5
+
 
 // stepper
 #include <CheapStepper.h>
@@ -118,7 +126,6 @@ ISR(TIMER0_COMPA_vect)
   {  
     if((PINB & (1 << PB4)) ==0)                // and button wasn't pressed last time 
     {                                                             
-      Serial.println("BUTTON");
       button_pressed = 1;                     // set debounced button press state to 1
     }
     else  
@@ -160,16 +167,15 @@ void pinChangeISR() {
 //*******************************************************************************************************************************************//
 
 void setup() {
-  
   // Init EEPROM to 0
   // Uncomment the following EEPROM write block, upload to device
   // then recomment the lines, upload to device
-  //  EEPROM.write(FL_ADDR,   0);
-  //  EEPROM.write(FL_ADDR+1, 0);
-  //  EEPROM.write(PS_ADDR,   0);
-  //  EEPROM.write(PS_ADDR+1, 0);
-  //  EEPROM.write(DA_ADDR,   0);
-  //  EEPROM.write(DF_ADDR,   0);
+  //EEPROM.write(FL_ADDR,   0);
+  //EEPROM.write(FL_ADDR+1, 0);
+  //EEPROM.write(PS_ADDR,   0);
+  //EEPROM.write(PS_ADDR+1, 0);
+  //EEPROM.write(DA_ADDR,   0);
+  //EEPROM.write(DF_ADDR,   0);
   
   // initialize timer and interrupt for button
   initTimer1();        
@@ -178,6 +184,10 @@ void setup() {
   pinMode(CLK, INPUT);
   pinMode(DT,  INPUT);
   pinMode(SW,  INPUT_PULLUP);
+
+  // set ST-4 pinmodes
+  pinMode(DEC_P, INPUT_PULLUP);
+  pinMode(DEC_N, INPUT_PULLUP);
   
   // set Encoder pin-change interrupts
   attachInterrupt(0, pinChangeISR, CHANGE);
@@ -192,7 +202,6 @@ void setup() {
   lcd.print("Star Adventurer ");
   lcd.setCursor(0, 1);
   lcd.print("DEC Ditherer    ");
-  Serial.begin(9600);
 
   // initialize encoder variables to 0
   enc_count     = 0;
@@ -289,7 +298,7 @@ switch(state)
     }
   break;
 
-  case SETTINGS_PS:                         // set pixel scale
+  case SETTINGS_PS:                         // set pixel size
   print_state();
   if(dir == RIGHT)
     {
@@ -417,7 +426,6 @@ void print_state()
     lcd.print("Settings     <->");
     lcd.setCursor(0, 1);
     lcd.print("                ");
-    Serial.println(state);
     break;
   
     case SETTINGS_FL:
@@ -425,7 +433,6 @@ void print_state()
     lcd.print("Focal Length mm ");
     lcd.setCursor(0, 1);
     lcd.print("<->             ");
-    Serial.println(state);
     break;
 
     case SETTINGS_PS:
@@ -435,7 +442,6 @@ void print_state()
     lcd.print("m   ");
     lcd.setCursor(0, 1);
     lcd.print("<->             ");
-    Serial.println(state);
     break;
 
     case SETTINGS_AMT:
@@ -443,7 +449,6 @@ void print_state()
     lcd.print("Dither Amount   ");
     lcd.setCursor(0, 1);
     lcd.print("<->             ");
-    Serial.println(state);
     break;
 
     case SETTINGS_FREQ:
@@ -451,7 +456,6 @@ void print_state()
     lcd.print("Dither Frequency");
     lcd.setCursor(0, 1);
     lcd.print("<->             ");
-    Serial.println(state);
     break;
 
     case SETTINGS_BACK:
@@ -459,7 +463,6 @@ void print_state()
     lcd.print("BACK            ");
     lcd.setCursor(0, 1);
     lcd.print("^               ");
-    Serial.println(state);
     break;
 
     case DITHER_RUN:
@@ -467,7 +470,6 @@ void print_state()
     lcd.print("Dither Run   <->");
     lcd.setCursor(0, 1);
     lcd.print("                ");
-    Serial.println(state);
     break;
 
     case DEC_CONTROL:
@@ -475,7 +477,6 @@ void print_state()
     lcd.print("DEC Control  <->");
     lcd.setCursor(0, 1);
     lcd.print("                ");
-    Serial.println(state);
     break;
   }
 }
@@ -589,7 +590,6 @@ lcd.blink();
 
 while(1)
 {   
-    Serial.println(FL);
     if(button_pressed)
     {
       button_pressed = 0;
@@ -657,7 +657,6 @@ lcd.blink();
 
 while(1) // set ones place
 {   
-    Serial.println(PS);
     if(button_pressed)                                    // if button was pressed break to next while loop
     {
       button_pressed = 0;
@@ -690,7 +689,6 @@ lcd.blink();
 
 while(1) // set tenths place
 {   
-    Serial.println(PS);
     if(button_pressed)
     {
       button_pressed = 0;
@@ -723,7 +721,6 @@ lcd.blink();
 
 while(1) // set hundredths place
 {   
-    Serial.println(PS);
     if(button_pressed)
     {
       button_pressed = 0;
@@ -786,6 +783,25 @@ void calc_pixel_scale()
 
 //*******************************************************************************************************************************************//
 
+// calculate arcminutes
+void show_arcmin()
+{
+  float temp = pixel_scale*pixels_per_step;
+  temp *= DA;
+  temp /= 6000;
+  lcd.setCursor(0, 0);
+  lcd.print("Set SA Dither to");
+  lcd.setCursor(0, 1);
+  lcd.print("                ");
+  lcd.setCursor(0, 1);
+  lcd.print(temp);
+  lcd.print(" arcmin");
+  lcd.noBlink();
+  lcd.noCursor();
+}
+
+//*******************************************************************************************************************************************//
+
 void calc_pixel_per_step()
 {
 // 4096 steps (technically half steps) per rotation of stepper
@@ -795,7 +811,7 @@ void calc_pixel_per_step()
 // 0.0007204[deg/step]*3600["/deg] = 2.5934["/step]
 // pixels_per_step = 2.59["/step]/X["/pix] = Y[pix/step]
 
-pixels_per_step = float(259)/float(pixel_scale);  
+pixels_per_step = float(259.34)/float(pixel_scale);  
 }
 
 //*******************************************************************************************************************************************//
@@ -880,6 +896,20 @@ while(1)
     }
     delay(1);
 }
+
+show_arcmin();
+
+while(1)
+{ 
+  if(button_pressed || (enc_old_count != enc_count))
+    {
+    button_pressed = 0;
+    enc_old_count = enc_count;
+    break;
+    }
+  delay(1);
+}
+
 print_state();  
 lcd.noBlink();
 
@@ -970,7 +1000,11 @@ void dither_loop()
 uint16_t steps = 0;
 
 // set baseline
+//gnd = analogRead(GND_PIN);
 shu = analogRead(SHU_PIN);
+//diff = gnd-shu;
+//diff = abs(diff);
+//previous_diff = diff;
 previous_shu = shu;
 
 lcd.setCursor(0, 0);
@@ -984,15 +1018,13 @@ while(1) // loop until DF shutter closes occur
 {
   while(shu_close_ctr < DF)
   {
-    //gnd = analogRead(GND_PIN);
+    check_STF();
     shu = analogRead(SHU_PIN);
-    //diff = gnd-shu;
-    //diff = abs(diff);
-    //if((diff-previous_diff) > OPEN_CLOSE_THRESHOLD)
-    if((shu-previous_shu) > OPEN_CLOSE_THRESHOLD)
+    if(((shu-previous_shu) > OPEN_CLOSE_THRESHOLD) || stf_posedge)
       {
-        Serial.println("CLOSE");
         shu_close_ctr++;
+        stf_posedge = 0;
+        
         if((DF-shu_close_ctr) != 0)
         {
           lcd.setCursor(0, 0);
@@ -1000,24 +1032,20 @@ while(1) // loop until DF shutter closes occur
           lcd.noCursor();
         }
       }
-    //previous_diff = diff;  
     previous_shu = shu;
     delay(100);
   }
 
   dither_steps = random(-DA,DA);
-  Serial.println(dither_steps);
   while(dither_steps == previous_dither_steps) // loop until new random steps is different than previous
      {dither_steps = random(-DA,DA);
-     Serial.println(-DA);}
+     }
 
   if(dither_steps > previous_dither_steps)
     { 
       if(last_direction == 1)
         steps = abs(dither_steps-previous_dither_steps) + BACKLASH;
       else steps = abs(dither_steps-previous_dither_steps);  
-      Serial.println(steps);
-      Serial.println();
       digitalWrite(A2, HIGH);
       delay(50);
       stepper.move(0, steps);
@@ -1034,8 +1062,6 @@ while(1) // loop until DF shutter closes occur
       if(last_direction == 0)
         steps = abs(dither_steps-previous_dither_steps) + BACKLASH;
       else steps = abs(dither_steps-previous_dither_steps);  
-      Serial.println(steps);
-      Serial.println();
       digitalWrite(A2, HIGH);
       delay(50);
       stepper.move(1, steps);
@@ -1052,9 +1078,8 @@ while(1) // loop until DF shutter closes occur
   lcd.print("    DITHERING   ");
   lcd.setCursor(0, 1);
   lcd.print("    !!!!!!!!!   ");
-  delay(1000);
+  delay(5000);
   
-  Serial.println("DITHER!");
   shu_close_ctr = 0;
   previous_dither_steps = dither_steps;
 
@@ -1068,6 +1093,13 @@ while(1) // loop until DF shutter closes occur
 }
 
 //*******************************************************************************************************************************************//
+void check_STF()
+{
+  if( (!digitalRead(DEC_P) || !digitalRead(DEC_N)) && !stf_posedge)
+      {stf_posedge  = 1;}
+      
+}
+//*******************************************************************************************************************************************//
 
 void run_dec_ctrl()
 {
@@ -1080,7 +1112,6 @@ lcd.blink();
 
 while(1)
 {  
-    Serial.println(dec_ctrl_state);
     
     if(button_pressed)                                              // if button pressed, break from dec control
     {
