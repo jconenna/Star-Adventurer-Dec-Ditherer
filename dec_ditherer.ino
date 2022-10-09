@@ -66,17 +66,9 @@ unsigned long last_button = 0;
 uint8_t button = 0;
 
 // shutter release signals
-int16_t shu,previous_shu = 0;
-#define GND_PIN A3
+int16_t gnd,shu,diff,previous_diff,previous_shu = 0;
 #define SHU_PIN A4
 #define OPEN_CLOSE_THRESHOLD 300
-
-// setup ST-4 (stf) signals
-uint8_t stf_posedge = 0; // was there a positive ST-4 DEC edge?
-uint8_t stf_previous = 0;
-#define DEC_P 13
-#define DEC_N A5
-
 
 // stepper
 #include <CheapStepper.h>
@@ -172,12 +164,12 @@ void setup() {
   // Init EEPROM to 0
   // Uncomment the following EEPROM write block, upload to device
   // then recomment the lines, upload to device
-  //EEPROM.write(FL_ADDR,   0);
-  //EEPROM.write(FL_ADDR+1, 0);
-  //EEPROM.write(PS_ADDR,   0);
-  //EEPROM.write(PS_ADDR+1, 0);
-  //EEPROM.write(DA_ADDR,   0);
-  //EEPROM.write(DF_ADDR,   0);
+  //  EEPROM.write(FL_ADDR,   0);
+  //  EEPROM.write(FL_ADDR+1, 0);
+  //  EEPROM.write(PS_ADDR,   0);
+  //  EEPROM.write(PS_ADDR+1, 0);
+  //  EEPROM.write(DA_ADDR,   0);
+  //  EEPROM.write(DF_ADDR,   0);
   
   // initialize timer and interrupt for button
   initTimer1();        
@@ -186,10 +178,6 @@ void setup() {
   pinMode(CLK, INPUT);
   pinMode(DT,  INPUT);
   pinMode(SW,  INPUT_PULLUP);
-
-  // set ST-4 pinmodes
-  pinMode(DEC_P, INPUT_PULLUP);
-  pinMode(DEC_N, INPUT_PULLUP);
   
   // set Encoder pin-change interrupts
   attachInterrupt(0, pinChangeISR, CHANGE);
@@ -982,11 +970,7 @@ void dither_loop()
 uint16_t steps = 0;
 
 // set baseline
-//gnd = analogRead(GND_PIN);
 shu = analogRead(SHU_PIN);
-//diff = gnd-shu;
-//diff = abs(diff);
-//previous_diff = diff;
 previous_shu = shu;
 
 lcd.setCursor(0, 0);
@@ -1000,14 +984,15 @@ while(1) // loop until DF shutter closes occur
 {
   while(shu_close_ctr < DF)
   {
-    check_STF();
+    //gnd = analogRead(GND_PIN);
     shu = analogRead(SHU_PIN);
-    if(((shu-previous_shu) > OPEN_CLOSE_THRESHOLD) || stf_posedge)
+    //diff = gnd-shu;
+    //diff = abs(diff);
+    //if((diff-previous_diff) > OPEN_CLOSE_THRESHOLD)
+    if((shu-previous_shu) > OPEN_CLOSE_THRESHOLD)
       {
         Serial.println("CLOSE");
         shu_close_ctr++;
-        stf_posedge = 0;
-        
         if((DF-shu_close_ctr) != 0)
         {
           lcd.setCursor(0, 0);
@@ -1015,6 +1000,7 @@ while(1) // loop until DF shutter closes occur
           lcd.noCursor();
         }
       }
+    //previous_diff = diff;  
     previous_shu = shu;
     delay(100);
   }
@@ -1066,7 +1052,7 @@ while(1) // loop until DF shutter closes occur
   lcd.print("    DITHERING   ");
   lcd.setCursor(0, 1);
   lcd.print("    !!!!!!!!!   ");
-  delay(5000);
+  delay(1000);
   
   Serial.println("DITHER!");
   shu_close_ctr = 0;
@@ -1081,13 +1067,6 @@ while(1) // loop until DF shutter closes occur
   
 }
 
-//*******************************************************************************************************************************************//
-void check_STF()
-{
-  if( (!digitalRead(DEC_P) || !digitalRead(DEC_N)) && !stf_posedge)
-      {stf_posedge  = 1; Serial.println("PASS");}
-      
-}
 //*******************************************************************************************************************************************//
 
 void run_dec_ctrl()
