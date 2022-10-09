@@ -789,6 +789,7 @@ void show_arcmin()
   float temp = pixel_scale*pixels_per_step;
   temp *= DA;
   temp /= 6000;
+  temp *= 2; // convert +/- range to full range that SA uses
   lcd.setCursor(0, 0);
   lcd.print("Set SA Dither to");
   lcd.setCursor(0, 1);
